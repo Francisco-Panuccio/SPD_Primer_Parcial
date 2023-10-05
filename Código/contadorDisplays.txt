@@ -34,36 +34,36 @@ void setup(){
     pinMode(E, OUTPUT);
     pinMode(F, OUTPUT);
     pinMode(G, OUTPUT);
-  	pinMode(UNIDAD, OUTPUT);
-  	pinMode(DECENA, OUTPUT);
+    pinMode(UNIDAD, OUTPUT);
+    pinMode(DECENA, OUTPUT);
     digitalWrite(UNIDAD, 0);
-  	digitalWrite(DECENA, 0);
-  	display_Digits(0);
+    digitalWrite(DECENA, 0);
+    display_Digits(0);
     Serial.begin(9600);
 }
 
 void loop(){
   	/*Se guarda el valor de la función key_Pressed y se analiza
   	si pertenece a un aumento, una disminución o un reseteo,
-    aumentando, disminuyendo o reseteando el contador respectivamente.*/
+    	aumentando, disminuyendo o reseteando el contador respectivamente.*/
   
 	int pressed = key_Pressed();
   
   	if(pressed == PULSADOR_AUMENTA){
-    	digit_counter++;
-      	if(digit_counter > 99){
-        	digit_counter = 0;
-        }
-    }
+    		digit_counter++;
+	      	if(digit_counter > 99){
+	        	digit_counter = 0;
+	        }
+    	}
   	else if(pressed == PULSADOR_DISMINUYE){
-    	digit_counter--;
-      	if(digit_counter < 0){
-        	digit_counter = 99;
-        }
-    }
+    		digit_counter--;
+	      	if(digit_counter < 0){
+	        	digit_counter = 99;
+        	}
+    	}
   	else if(pressed == PULSADOR_RESET){
-    	digit_counter = 0;
-    }
+    		digit_counter = 0;
+    	}
   
   	display_Counter(digit_counter);
 }
@@ -72,7 +72,7 @@ void display_Digits(int digit){
   	/*Función que prende o apaga cada una de las terminales de un
   	display, formando los distintos números del 0 al 9.*/
   
-	digitalWrite(A, LOW);
+    digitalWrite(A, LOW);
     digitalWrite(B, LOW);
     digitalWrite(C, LOW);
     digitalWrite(D, LOW);
@@ -155,22 +155,22 @@ void display_Digits(int digit){
 
 void switch_On(int digit){
   	/*Función que, según lo retornado de la función switch_On,
-    prende o apaga el display DECENA o UNIDAD según se requiera.*/
+   	prende o apaga el display DECENA o UNIDAD según se requiera.*/
   	
 	if(digit == UNIDAD){
-    	digitalWrite(UNIDAD, LOW);
-      	digitalWrite(DECENA, HIGH);
-      	delay(10);
-    }
+	    	digitalWrite(UNIDAD, LOW);
+	      	digitalWrite(DECENA, HIGH);
+	      	delay(10);
+    	}
   	else if(digit == DECENA){
-    	digitalWrite(UNIDAD, HIGH);
-      	digitalWrite(DECENA, LOW);
-      	delay(10);
-    }
+	    	digitalWrite(UNIDAD, HIGH);
+	      	digitalWrite(DECENA, LOW);
+	      	delay(10);
+    	}
   	else{
-    	digitalWrite(UNIDAD, HIGH);
-      	digitalWrite(DECENA, HIGH);
-    }
+	    	digitalWrite(UNIDAD, HIGH);
+	      	digitalWrite(DECENA, HIGH);
+    	}
 }
 
 void display_Counter(int counter){
@@ -194,28 +194,28 @@ int key_Pressed(void){
   
   	//Implica que ningún pulsador está presionado.
   	if(increase){
-    	increase_before = 1;  
-    }
+	    	increase_before = 1;  
+    	}
    	if(decrease){
-    	decrease_before = 1;
-    }
-    if(reset){
-    	reset_before = 1;
-    }
+	    	decrease_before = 1;
+    	}
+    	if(reset){
+	    	reset_before = 1;
+    	}
   
   	//Implica que algún pulsador se está presionando.
   	if(increase == 0 && increase != increase_before){
-    	increase_before = increase;
-      	return PULSADOR_AUMENTA;
-    }
+	    	increase_before = increase;
+	      	return PULSADOR_AUMENTA;
+    	}
   	if(decrease == 0 && decrease != decrease_before){
-    	decrease_before = decrease;
-      	return PULSADOR_DISMINUYE;
-    }
-    if(reset == 0 && reset != reset_before){
-    	reset_before = reset;
-      	return PULSADOR_RESET;
-    }
+	    	decrease_before = decrease;
+	      	return PULSADOR_DISMINUYE;
+    	}
+    	if(reset == 0 && reset != reset_before){
+	    	reset_before = reset;
+	      	return PULSADOR_RESET;
+    	}
   
  return 0;
 }
