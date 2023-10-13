@@ -154,7 +154,7 @@ void display_Digits(int digit){
 }
 
 void switch_On(int digit){
-  	/*Función que, según lo retornado de la función switch_On,
+  	/*Función que, según lo retornado de la función display_Counter,
    	prende o apaga el display DECENA o UNIDAD según se requiera.*/
   	
 	if(digit == UNIDAD){
