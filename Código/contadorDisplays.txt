@@ -1,9 +1,10 @@
 // C++ code
 //
 
-#define PULSADOR_RESET 4
+#define INTERRUPTOR 4
 #define PULSADOR_AUMENTA 3
 #define PULSADOR_DISMINUYE 2
+#define SENSOR_FUERZA A0
 #define UNIDAD A4
 #define DECENA A5
 #define A 10
@@ -20,11 +21,9 @@ int increase = 1;
 int increase_before = 1;
 int decrease = 1;
 int decrease_before = 1;
-int reset = 1;
-int reset_before = 1;
 
 void setup(){
-    pinMode(PULSADOR_RESET, INPUT_PULLUP);
+    pinMode(INTERRUPTOR, INPUT_PULLUP);
     pinMode(PULSADOR_AUMENTA, INPUT_PULLUP);
     pinMode(PULSADOR_DISMINUYE, INPUT_PULLUP);
     pinMode(A, OUTPUT);
@@ -43,179 +42,238 @@ void setup(){
 }
 
 void loop(){
-  	/*Se guarda el valor de la función key_Pressed y se analiza
-  	si pertenece a un aumento, una disminución o un reseteo,
-    	aumentando, disminuyendo o reseteando el contador respectivamente.*/
+  /*Se guarda el valor de la función key_Pressed y se analiza
+  si pertenece a un aumento o a una disminución,
+  aumentando o disminuyendo el contador respectivamente.
+  A su vez, se guarda el valor de la fuerza realizada mediante el sensor, y
+  de ser mayor a 7N aproximadamente, se resetea el contador.*/
   
-	int pressed = key_Pressed();
+  int pressed = key_Pressed();
+  int sensor = analogRead(SENSOR_FUERZA);
+  int slipped = digitalRead(INTERRUPTOR);
+  	
+  /*Implica que el sensor captó una fuerza mayor a 7N, provocando
+  que los contadores se reinicien a cero.*/
+  if(sensor > 150){
+    digit_counter = 0;
+  }
   
-  	if(pressed == PULSADOR_AUMENTA){
-    		digit_counter++;
-	      	if(digit_counter > 99){
-	        	digit_counter = 0;
-	        }
-    	}
-  	else if(pressed == PULSADOR_DISMINUYE){
-    		digit_counter--;
-	      	if(digit_counter < 0){
-	        	digit_counter = 99;
-        	}
-    	}
-  	else if(pressed == PULSADOR_RESET){
-    		digit_counter = 0;
-    	}
-  
-  	display_Counter(digit_counter);
+  //Implica que el interruptor está a la derecha (Contador Normal).
+  if(slipped == 0){
+    if(pressed == PULSADOR_AUMENTA){
+        digit_counter++;
+        if(digit_counter > 99){
+            digit_counter = 0;
+      }
+    }
+    else if(pressed == PULSADOR_DISMINUYE){
+        digit_counter--;
+        if(digit_counter < 0){
+            digit_counter = 99;
+        }
+    }
+    display_Counter(digit_counter);
+  }
+  //Implica que el interruptor está a la izquierda (Contador Primos).
+  else{
+      int divisors = 0;
+      if(pressed == PULSADOR_AUMENTA){
+        digit_counter++;
+        for(int i = 1; i <= digit_counter; i++){
+          if(digit_counter % i == 0){
+            divisors ++;
+          }
+        }
+        /*Mientras los divisores sean mayores a dos o iguales a
+        uno, se seguirán recorriendo los números para saltearse
+        aquellos que no sean primos.*/  
+        while(divisors > 2 || divisors == 1){
+          if(pressed == PULSADOR_AUMENTA){
+            digit_counter ++;
+          }
+          if(digit_counter > 97){
+            digit_counter = 0;
+          }
+          divisors = 0;
+          for(int i = 1; i <= digit_counter; i++){
+            if(digit_counter % i == 0){
+              divisors ++;
+            }
+          }
+        }
+        if(digit_counter > 97){
+          digit_counter = 0;
+        }
+      }
+      else if(pressed == PULSADOR_DISMINUYE){
+        digit_counter--;
+        for(int i = 1; i <= digit_counter; i++){
+          if(digit_counter % i == 0){
+            divisors ++;
+          }
+        }
+        while(divisors > 2 || divisors == 1){
+          if(pressed == PULSADOR_DISMINUYE){
+            digit_counter --;
+          }
+          if(digit_counter < 0){
+            digit_counter = 97;
+          }
+          divisors = 0;
+          for(int i = 1; i <= digit_counter; i++){
+            if(digit_counter % i == 0){
+              divisors ++;
+            }
+          }
+        }
+        if(digit_counter < 0){
+          digit_counter = 97;
+        }
+      }
+  }
+  display_Counter(digit_counter);
 }
 
 void display_Digits(int digit){
-  	/*Función que prende o apaga cada una de las terminales de un
-  	display, formando los distintos números del 0 al 9.*/
+  /*Función que prende o apaga cada una de las terminales de un
+  display, formando los distintos números del 0 al 9.*/
   
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, LOW);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+  digitalWrite(A, LOW);
+  digitalWrite(B, LOW);
+  digitalWrite(C, LOW);
+  digitalWrite(D, LOW);
+  digitalWrite(E, LOW);
+  digitalWrite(F, LOW);
+  digitalWrite(G, LOW);
   
-    switch(digit){
-      case 0:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(E, HIGH);
-        digitalWrite(F, HIGH);
-        break;
-      case 1:
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        break;
-      case 2:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(E, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-      case 3:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-      case 4:
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(F, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-      case 5:
-        digitalWrite(A, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(F, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-      case 6:
-        digitalWrite(A, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(E, HIGH);
-        digitalWrite(F, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-      case 7:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        break;
-      case 8:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(D, HIGH);
-        digitalWrite(E, HIGH);
-        digitalWrite(F, HIGH);
-      	digitalWrite(G, HIGH);
-        break;
-      case 9:
-        digitalWrite(A, HIGH);
-        digitalWrite(B, HIGH);
-        digitalWrite(C, HIGH);
-        digitalWrite(F, HIGH);
-        digitalWrite(G, HIGH);
-        break;
-    }
+  switch(digit){
+    case 0:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(E, HIGH);
+      digitalWrite(F, HIGH);
+      break;
+    case 1:
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      break;
+    case 2:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(E, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 3:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 4:
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(F, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 5:
+      digitalWrite(A, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(F, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 6:
+      digitalWrite(A, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(E, HIGH);
+      digitalWrite(F, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 7:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      break;
+    case 8:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      digitalWrite(E, HIGH);
+      digitalWrite(F, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+    case 9:
+      digitalWrite(A, HIGH);
+      digitalWrite(B, HIGH);
+      digitalWrite(C, HIGH);
+      digitalWrite(F, HIGH);
+      digitalWrite(G, HIGH);
+      break;
+  }
 }
 
 void switch_On(int digit){
-  	/*Función que, según lo retornado de la función display_Counter,
-   	prende o apaga el display DECENA o UNIDAD según se requiera.*/
+  /*Función que, según lo retornado de la función display_Counter,
+  prende o apaga el display DECENA o UNIDAD según se requiera.*/
   	
-	if(digit == UNIDAD){
-	    	digitalWrite(UNIDAD, LOW);
-	      	digitalWrite(DECENA, HIGH);
-	      	delay(10);
-    	}
-  	else if(digit == DECENA){
-	    	digitalWrite(UNIDAD, HIGH);
-	      	digitalWrite(DECENA, LOW);
-	      	delay(10);
-    	}
-  	else{
-	    	digitalWrite(UNIDAD, HIGH);
-	      	digitalWrite(DECENA, HIGH);
-    	}
+  if(digit == UNIDAD){
+    digitalWrite(UNIDAD, LOW);
+      digitalWrite(DECENA, HIGH);
+      delay(10);
+  }
+  else if(digit == DECENA){
+    digitalWrite(UNIDAD, HIGH);
+      digitalWrite(DECENA, LOW);
+      delay(10);
+  }
+  else{
+    digitalWrite(UNIDAD, HIGH);
+      digitalWrite(DECENA, HIGH);
+  }
 }
 
 void display_Counter(int counter){
-  	/*Función que permite mostrar en los displays los números según
-  	el contador vaya aumentando o disminuyendo.*/
+  /*Función que permite mostrar en los displays los números según
+  el contador vaya aumentando o disminuyendo.*/
   
-	switch_On(OFF);
-  	display_Digits(counter/10);
-  	switch_On(DECENA);
-  	switch_On(OFF);
-  	display_Digits(counter - 10 * ((int)counter / 10));
-  	switch_On(UNIDAD);
+  switch_On(OFF);
+  display_Digits(counter/10);
+  switch_On(DECENA);
+  switch_On(OFF);
+  display_Digits(counter - 10 * ((int)counter / 10));
+  switch_On(UNIDAD);
 }
 
 int key_Pressed(void){
-  	//Retorna el valor del pulsador apretado.
+  //Retorna el valor del pulsador apretado.
 
-	increase = digitalRead(PULSADOR_AUMENTA);
-  	decrease = digitalRead(PULSADOR_DISMINUYE);
-  	reset = digitalRead(PULSADOR_RESET);
+  increase = digitalRead(PULSADOR_AUMENTA);
+  decrease = digitalRead(PULSADOR_DISMINUYE);
   
-  	//Implica que ningún pulsador está presionado.
-  	if(increase){
-	    	increase_before = 1;  
-    	}
-   	if(decrease){
-	    	decrease_before = 1;
-    	}
-    	if(reset){
-	    	reset_before = 1;
-    	}
+  //Implica que ningún pulsador está presionado.
+  if(increase){
+    increase_before = 1;  
+  }
+  if(decrease){
+    decrease_before = 1;
+  }
   
-  	//Implica que algún pulsador se está presionando.
-  	if(increase == 0 && increase != increase_before){
-	    	increase_before = increase;
-	      	return PULSADOR_AUMENTA;
-    	}
-  	if(decrease == 0 && decrease != decrease_before){
-	    	decrease_before = decrease;
-	      	return PULSADOR_DISMINUYE;
-    	}
-    	if(reset == 0 && reset != reset_before){
-	    	reset_before = reset;
-	      	return PULSADOR_RESET;
-    	}
-  
- return 0;
+  //Implica que algún pulsador se está presionando.
+  if(increase == 0 && increase != increase_before){
+    increase_before = increase;
+      return PULSADOR_AUMENTA;
+  }
+  if(decrease == 0 && decrease != decrease_before){
+    decrease_before = decrease;
+      return PULSADOR_DISMINUYE;
+  }
+
+  return 0;
 }
