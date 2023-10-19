@@ -18,7 +18,6 @@ Creación en Tinkercad de un contador con dos displays correspondientes a Decena
 
 La función principal de este proyecto es la de crear un contador que vaya aumentando o disminuyendo en un rango total del 0 al 99, controlándolo mediante tres pulsadores, uno que aumenta al contador, otro que lo disminuye y el último que puede resetearlo a cero. Los números serán mostrados mediante dos displays, uno que representa a la decena y otro a la unidad, recreando un contador digital completamente funcional.
 
-
 ## Link al Proyecto 🚀🛠️
 
 * [**Proyecto Tinkercad**](https://www.tinkercad.com/things/jTs2s4dpUFw)
@@ -38,7 +37,6 @@ Creación en Tinkercad de un contador, tanto normal (permite mostrar los distint
 
 La función principal de este proyecto es la de crear un contador que vaya aumentando o disminuyendo en un rango total del 0 al 99, con la posibilidad de cambiar mediante un interruptor deslizante, a un modo en el que se muestren solamente los números primos. El contador como tal se controla mediante dos pulsadores, uno que aumenta al contador y otro que lo disminuye. Los números serán mostrados mediante dos displays, uno que representa a la decena y otro a la unidad, recreando un contador digital completamente funcional.
 
-
 ## Link al Proyecto 🚀🛠️
 
 * [**Proyecto Tinkercad**](https://www.tinkercad.com/things/8NAX71s5qzC)
@@ -46,3 +44,22 @@ La función principal de este proyecto es la de crear un contador que vaya aumen
 ## Link al Documento con la Explicación del Motor CC 🛠️
 
 * [**Documento Motor CC**](https://firebasestorage.googleapis.com/v0/b/react-playgames.appspot.com/o/Screen%2FMotor_CC.docx?alt=media&token=c8a505e1-4914-44ac-93b7-95e6350cdc3f)
+
+
+# SPD_Primer_Parcial (Tercera Parte)
+
+Proyecto Contador/Números-Primos con Interruptor Deslizante, Sensor de Fuerza y Fotodiodo en Tinkercad.
+
+![App Screenshot](https://firebasestorage.googleapis.com/v0/b/react-playgames.appspot.com/o/Screen%2Fproyecto_tres.png?alt=media&token=e03f3ec3-6cb0-44f6-bbbe-fd2306dca7c7)
+
+## Descripción
+
+Creación en Tinkercad de un contador, tanto normal (permite mostrar los distintos números del 0 al 99 según se presione el pulsador que aumenta o disminuye), como de números primos, eligiendo mostrar uno o el otro mediante un interruptor deslizante. Esto se ve reflejado gracias a dos displays correspondientes a Decena y Unidad. Un sensor de fuerza permite resetear el contador a cero al sobrepasar los 7N de fuerza, y un fotodiodo permite encender un led amarillo y colocar al contador en 31 en caso de captar una determinada cantidad de luz.
+
+## Función Principal
+
+La función principal de este proyecto es la de crear un contador que vaya aumentando o disminuyendo en un rango total del 0 al 99, con la posibilidad de cambiar mediante un interruptor deslizante, a un modo en el que se muestren solamente los números primos. El contador como tal se controla mediante dos pulsadores, uno que aumenta al contador y otro que lo disminuye. Los números serán mostrados mediante dos displays, uno que representa a la decena y otro a la unidad, recreando un contador digital completamente funcional.
+
+## Link al Proyecto 🚀🛠️
+
+* [**Proyecto Tinkercad**](https://www.tinkercad.com/things/5Ep2a2dJgtT-copy-of-segundo-parcial/editel?tenant=circuits)
