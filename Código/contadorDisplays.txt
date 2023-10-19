@@ -71,6 +71,7 @@ void loop(){
       	digitalWrite(LED_AMARILLO, HIGH);
     }
   	else {
+	digit_counter = 0;
     	digitalWrite(LED_AMARILLO, LOW);
     }
   
